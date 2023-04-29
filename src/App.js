@@ -2,7 +2,18 @@ import React, { useEffect, useRef, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { makeStyles } from "@mui/styles";
-import { Collapse, List, ListItem, ListItemButton, Typography } from "@mui/material";
+import {
+  Collapse,
+  FormControl,
+  FormLabel,
+  List,
+  ListItem,
+  ListItemButton,
+  Radio,
+  RadioGroup,
+  Typography,
+} from "@mui/material";
+import { RadioButtonUnchecked } from "@mui/icons-material";
 
 // import React, { useState } from 'react';
 
@@ -64,102 +75,158 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
 function RegistrationForm() {
   const classes = useStyles();
   const [expandedKeys, setExpandedKeys] = useState(null);
-  const [formData, setFormData] = useState(null);
-  const [currentField, setCurrentField] = useState(99);
-  const [name, setName] = useState("");
-  const [industry, setIndustry] = useState("");
-  const [scale, setScale] = useState("");
+  const [formData, setFormData] = useState({});
+  const [currentField, setCurrentField] = useState("companyName");
+  const listRef = useRef(null);
 
   const map1 = new Map();
 
-  map1.set('Automated Defect Detection', 'You can use AI-powered computer vision systems to automatically detect defects in your products during the manufacturing process. The system can analyze images of the products and identify any abnormalities or defects such as cracks, discoloration, or other visual imperfections. This can help you catch defects early in the process and reduce waste.');
-  map1.set('Predictive Maintenance', 'You can also use AI to monitor your machines and equipment to detect potential issues before they become serious. By analyzing data from sensors and other sources, AI can identify patterns and anomalies that indicate potential equipment failures. This can help you schedule maintenance proactively, avoid downtime, and minimize the risk of product defects caused by faulty equipment.');
-  map1.set('Statistical Process Control', 'You can use statistical process control (SPC) techniques to monitor the quality of your products and identify any trends or patterns that may indicate a problem. AI-powered SPC systems can analyze large amounts of data in real-time to detect variations and deviations from normal patterns. This can help you catch quality issues early and take corrective action before they become a major problem.');
-  map1.set('Root Cause Analysis', 'When quality issues do occur, you can use AI-powered root cause analysis tools to identify the underlying causes of the problem. By analyzing data from multiple sources, including production data, customer feedback, and other sources, AI can help you identify the root cause of the issue and take corrective action to prevent it from happening again.');
-  map1.set('Automated Testing', 'You can also use AI to automate testing of your products. This can help you test products more quickly and efficiently, while reducing the risk of human error. AI-powered testing systems can perform a variety of tests, such as strength tests or impact tests, to ensure that your products meet quality standards.');
-  
+  map1.set(
+    "Automated Defect Detection",
+    "You can use AI-powered computer vision systems to automatically detect defects in your products during the manufacturing process. The system can analyze images of the products and identify any abnormalities or defects such as cracks, discoloration, or other visual imperfections. This can help you catch defects early in the process and reduce waste."
+  );
+  map1.set(
+    "Predictive Maintenance",
+    "You can also use AI to monitor your machines and equipment to detect potential issues before they become serious. By analyzing data from sensors and other sources, AI can identify patterns and anomalies that indicate potential equipment failures. This can help you schedule maintenance proactively, avoid downtime, and minimize the risk of product defects caused by faulty equipment."
+  );
+  map1.set(
+    "Statistical Process Control",
+    "You can use statistical process control (SPC) techniques to monitor the quality of your products and identify any trends or patterns that may indicate a problem. AI-powered SPC systems can analyze large amounts of data in real-time to detect variations and deviations from normal patterns. This can help you catch quality issues early and take corrective action before they become a major problem."
+  );
+  map1.set(
+    "Root Cause Analysis",
+    "When quality issues do occur, you can use AI-powered root cause analysis tools to identify the underlying causes of the problem. By analyzing data from multiple sources, including production data, customer feedback, and other sources, AI can help you identify the root cause of the issue and take corrective action to prevent it from happening again."
+  );
+  map1.set(
+    "Automated Testing",
+    "You can also use AI to automate testing of your products. This can help you test products more quickly and efficiently, while reducing the risk of human error. AI-powered testing systems can perform a variety of tests, such as strength tests or impact tests, to ensure that your products meet quality standards."
+  );
+
+  // const listItems = Array.from(listRef.current.querySelectorAll("li"));
+  // const maxWidth = Math.max(...listItems.map((li) => li.clientWidth));
+  // listRef.current.style.minWidth = `${maxWidth}px`
+
   // console.log(map1)
   const handleNextField = () => {
-    setCurrentField(currentField + 1);
+    // setCurrentField(currentField + 1)
+    console.log(currentField)
+    switch (currentField) {
+      case "companyName":
+        console.log(currentField)
+        setCurrentField(() => "industry");
+        console.log(currentField)
+        break;
+
+      case "industry":
+        setCurrentField("product");
+        break;
+
+      case "product":
+        setCurrentField("businessModel");
+        break;
+
+      case "businessModel":
+        setCurrentField("productLine");
+        break;
+
+      case "productLine":
+        setCurrentField("audience");
+        break;
+
+      case "audience":
+        setCurrentField("differentiateFactor");
+        break;
+
+      case "differentiateFactor":
+        setCurrentField("goal");
+        break;
+
+      case "goal":
+        setCurrentField("challenges");
+        break;
+
+      case "challenges":
+        setCurrentField("implAIBefore");
+        break;
+
+      default:
+        break;
+    }
+    // setCurrentField(currentField + 1);
   };
 
-  const handleSubmit = (event) => {
+  function handleInputChange(event) {
+    console.log(formData);
+    const { name, value } = event.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  }
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // submit form data to backend
-    console.log("In submit..")
-    setCurrentField(1);
+    console.log("In submit..");
+    const response = await fetch("/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await response.json();
+    console.log(data);
+    setCurrentField(99);
   };
 
-  const listRef = useRef(null);
-
-  useEffect(() => {
-    // Set the minimum width of the list to the width of the widest list item
-    const listItems = Array.from(listRef.current.querySelectorAll("li"));
-    const maxWidth = Math.max(...listItems.map((li) => li.clientWidth));
-    listRef.current.style.minWidth = `${maxWidth}px`;
-  }, [map1]);
-
   function getSolutionComponents(map1) {
-    console.log("In Solution Component")
-    // const comps = [];
-    // map.forEach((value, key) => comps.push(
-    //   <div>
-    //     <h3>{key}</h3>
-    //     <p>{value}</p>
-    //   </div>
-    // ))
-  
-    // const [expandedKeys, setExpandedKeys] = useState([]);
-  
+    console.log("In Solution Component");
+
     const handleKeyClick = (key) => {
       setExpandedKeys(key === expandedKeys ? null : key);
     };
-  
+
     return (
-      // <List dense="True">
-      //   {Array.from(map1.keys()).map((key) => (
-      //     <ListItem key={key} disablePadding divider="true">
-      //       <ListItemButton alignItems='flex-start' onClick={() => handleKeyClick(key)}>
-      //         <Typography variant="h6" component="span">
-      //           {key}
-      //         </Typography>
-      //       </ListItemButton>
-      //       <Collapse in={expandedKeys.includes(key)} timeout="auto" unmountOnExit>
-      //         <Typography variant="body1" component="div">
-      //           {map1.get(key)}
-      //         </Typography>
-      //       </Collapse>
-      //     </ListItem>
-      //   ))}
-      // </List>
       <List ref={listRef}>
-      {Array.from(map1.keys()).map((key) => (
-        <React.Fragment key={key}>
-          <ListItem>
-            <ListItemButton onClick={() => handleKeyClick(key)}>
-              <Typography variant="h6" component="span">
-                {key}
-              </Typography>
-            </ListItemButton>
-          </ListItem>
-          <Collapse in={key === expandedKeys} timeout="auto" unmountOnExit sx={{ position: "relative" }}>
-            <ListItem>
-              <Typography variant="body1" component="div">
-                {map1.get(key)}
-              </Typography>
+        {Array.from(map1.keys()).map((key) => (
+          <React.Fragment key={key}>
+            <ListItem padding="20px">
+              <ListItemButton onClick={() => handleKeyClick(key)}>
+                <Typography variant="h6" component="span">
+                  {key}
+                </Typography>
+              </ListItemButton>
             </ListItem>
-          </Collapse>
-        </React.Fragment>
-      ))}
-    </List>
+            <Collapse
+              in={key === expandedKeys}
+              timeout="auto"
+              unmountOnExit
+              sx={{ position: "relative" }}
+            >
+              <ListItem padding="20px">
+                <Typography paragraph={true} variant="body1" component="div">
+                  {map1.get(key)}
+                </Typography>
+              </ListItem>
+            </Collapse>
+          </React.Fragment>
+        ))}
+      </List>
     );
     // return comps
   }
+
+  // useEffect(() => {
+  //   // Set the minimum width of the list to the width of the widest list item
+  //   const listItems = Array.from(listRef.current.querySelectorAll("li"));
+  //   const maxWidth = Math.max(...listItems.map((li) => li.clientWidth));
+  //   listRef.current.style.minWidth = `${maxWidth}px`;
+  // }, [map1]);
 
   return (
     <div className={classes.root}>
@@ -169,76 +236,229 @@ function RegistrationForm() {
           {getSolutionComponents(map1)}
         </div>
       )}
-      {currentField < 99 && (
-      <form className={classes.form} onSubmit={handleSubmit}>
-        <h1 className={classes.title}>Start</h1>
-        {currentField === 1 && (
-          <div className={classes.field}>
-            <TextField
-              id="name"
-              label="Company Name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              variant="outlined"
-              size="small"
-              margin="normal"
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              margin="normal"
-              onClick={handleNextField}
-            >
-              Next
-            </Button>
-          </div>
-        )}
+      {currentField !== 99 && (
+        <form className={classes.form} onSubmit={handleSubmit}>
+          <h1 className={classes.title}>Start</h1>
+          {currentField === "companyName" && (
+            <div className={classes.field}>
+              <TextField
+                id="companyName"
+                label="Company Name"
+                name="companyName"
+                onChange={handleInputChange}
+                variant="outlined"
+                size="small"
+                margin="normal"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                margin="normal"
+                onClick={handleNextField}
+              >
+                Next
+              </Button>
+            </div>
+          )}
 
-        {currentField === 2 && (
-          <div className={classes.field}>
-            <TextField
-              id="industry"
-              label="Industry"
-              type="industry"
-              value={industry}
-              onChange={(event) => setIndustry(event.target.value)}
-              variant="outlined"
-              size="small"
-              margin="normal"
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              margin="normal"
-              onClick={handleNextField}
-            >
-              Next
-            </Button>
-          </div>
-        )}
-        {currentField === 3 && (
-          <div className={classes.field}>
-            <TextField
-              id="scale"
-              label="Scale"
-              type="scale"
-              value={scale}
-              onChange={(event) => setScale(event.target.value)}
-              variant="outlined"
-              size="small"
-              margin="normal"
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              margin="normal"
-            >
-              Submit
-            </Button>
-          </div>
-        )}
-      </form>
+          {currentField === "industry" && (
+            <div className={classes.field}>
+              <TextField
+                id="industry"
+                label="Industry"
+                name="industry"
+                onChange={handleInputChange}
+                variant="outlined"
+                size="small"
+                margin="normal"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                margin="normal"
+                onClick={handleNextField}
+              >
+                Next
+              </Button>
+            </div>
+          )}
+
+          {currentField === "product" && (
+            <div className={classes.field}>
+              <TextField
+                id="product"
+                label="Product"
+                name="product"
+                onChange={handleInputChange}
+                variant="outlined"
+                size="small"
+                margin="normal"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                margin="normal"
+                onClick={handleNextField}
+              >
+                Next
+              </Button>
+            </div>
+          )}
+
+          {currentField === "businessModel" && (
+            <div className={classes.field}>
+              <TextField
+                id="businessModel"
+                label="Business Model"
+                name="businessModel"
+                onChange={handleInputChange}
+                variant="outlined"
+                size="small"
+                margin="normal"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                margin="normal"
+                onClick={handleNextField}
+              >
+                Next
+              </Button>
+            </div>
+          )}
+
+          {currentField === "productLine" && (
+            <div className={classes.field}>
+              <TextField
+                id="productLine"
+                label="Product Line"
+                name="productLine"
+                onChange={handleInputChange}
+                variant="outlined"
+                size="small"
+                margin="normal"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                margin="normal"
+                onClick={handleNextField}
+              >
+                Next
+              </Button>
+            </div>
+          )}
+
+          {currentField === "audience" && (
+            <div className={classes.field}>
+              <TextField
+                id="audience"
+                label="Your clients"
+                name="audience"
+                onChange={handleInputChange}
+                variant="outlined"
+                size="small"
+                margin="normal"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                margin="normal"
+                onClick={handleNextField}
+              >
+                Next
+              </Button>
+            </div>
+          )}
+
+          {currentField === "differentiateFactor" && (
+            <div className={classes.field}>
+              <TextField
+                id="differentiateFactor"
+                label="Differentiating Factor"
+                name="differentiateFactor"
+                onChange={handleInputChange}
+                variant="outlined"
+                size="small"
+                margin="normal"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                margin="normal"
+                onClick={handleNextField}
+              >
+                Next
+              </Button>
+            </div>
+          )}
+
+          {currentField === "goal" && (
+            <div className={classes.field}>
+              <TextField
+                id="goal"
+                label="Vision of the Company"
+                name="goal"
+                onChange={handleInputChange}
+                variant="outlined"
+                size="small"
+                margin="normal"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                margin="normal"
+                onClick={handleNextField}
+              >
+                Next
+              </Button>
+            </div>
+          )}
+
+          {currentField === "challenges" && (
+            <div className={classes.field}>
+              <TextField
+                id="challenges"
+                label="Major challenge your company faces"
+                name="challenges"
+                onChange={handleInputChange}
+                variant="outlined"
+                size="small"
+                margin="normal"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                margin="normal"
+                onClick={handleNextField}
+              >
+                Next
+              </Button>
+            </div>
+          )}
+
+          {currentField === "implAIBefore" && (
+            <div className={classes.field}>
+              <FormLabel>Has your company implemented AI before?</FormLabel>
+              <RadioGroup
+                aria-labelledby="demo-radio-buttons-group-label"
+                name="radio-buttons-group"
+              >
+                <FormControl value={true} control={<Radio />} label="Yes" />
+                <FormControl value={true} control={<Radio />} label="Yes" />
+              </RadioGroup>
+
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                margin="normal"
+              >
+                Submit
+              </Button>
+            </div>
+          )}
+        </form>
       )}
     </div>
   );
