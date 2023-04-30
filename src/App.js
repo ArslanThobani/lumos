@@ -1,8 +1,10 @@
+import './globalStyle.css';
 import React, { useEffect, useRef, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { makeStyles } from "@mui/styles";
 import {
+  Box,
   Collapse,
   FormControl,
   FormControlLabel,
@@ -15,6 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import { RadioButtonUnchecked } from "@mui/icons-material";
+import Navbar from './Navbar';
 
 // import React, { useState } from 'react';
 
@@ -80,7 +83,8 @@ function RegistrationForm() {
   const classes = useStyles();
   const [expandedKeys, setExpandedKeys] = useState(null);
   const [formData, setFormData] = useState({});
-  const [currentField, setCurrentField] = useState("companyName");
+  // const [currentField, setCurrentField] = useState("companyName");
+  const [currentField, setCurrentField] = useState(0);
   const listRef = useRef(null);
 
   const map1 = new Map();
@@ -106,6 +110,28 @@ function RegistrationForm() {
     "You can also use AI to automate testing of your products. This can help you test products more quickly and efficiently, while reducing the risk of human error. AI-powered testing systems can perform a variety of tests, such as strength tests or impact tests, to ensure that your products meet quality standards."
   );
 
+  const map2 = new Map();
+
+  map2.set("Automated Food Ordering", [
+    "The cost of implementing an automated food ordering system would depend on the complexity of the system, as well as the cost of any hardware or software required. There is also a risk that customers may not be comfortable with using an automated system, resulting in a decrease in customer satisfaction.",
+    "Implementing an automated food ordering system could create business value by reducing order processing time and increasing efficiency, leading to increased customer satisfaction and improved profitability.",
+    "Data sources for this use case could include customer order history, restaurant menus, delivery locations etc. Specific examples could include online databases such as Yelp or Zomato for restaurant menus and delivery locations, or internal databases containing customer order history.",
+  ]);
+  map2.set("Predictive Ordering", [
+    "The cost of implementing a predictive ordering system would depend on the complexity of the algorithm used to make predictions, as well as any hardware or software required to run it. There is also a risk that customers may not be comfortable with having their orders predicted by AI algorithms which could lead to decreased user engagement with the app.",
+    "Implementing predictive ordering can create business value by allowing restaurants to anticipate demand more accurately which can lead to improved efficiency in operations and increased profitability due to reduced wastage from over-ordering ingredients etc..",
+    "Data sources for this use case could include customer order history, restaurant menus etc., along with external data sources such as weather forecasts which can help predict demand based on seasonality trends etc.. Specific examples could include online databases such as Yelp or Zomato for restaurant menus and delivery locations, or internal databases containing customer order history combined with external data sources such as weather forecasts from services like Dark Sky API etc..",
+  ]);
+  map2.set("Route Optimization", [
+    "The cost of implementing route optimization would depend on the complexity of the algorithm used for route optimization along with any hardware/software required to run it efficiently. There is also a risk that customers may experience delays if routes are not optimized correctly due to incorrect assumptions about traffic conditions etc., resulting in decreased user satisfaction levels.",
+    "Implementing route optimization can create business value by reducing travel times , improving fleet utilization , increasing efficiency , leading ultimately leading towards increased profitability.",
+    "Data sources for this use case would include real-time traffic information , road accessibility information , location coordinates (latitude & longitude)etc . Specific examples could include Google Maps API & Open Street Map API’s providing real-time traffic information & road accessibility information respectively along with GPS coordinates from devices like smartphones/tablets carried by delivery boys.",
+  ]);
+  map2.set("Personalized Recommendations", [
+    "The costs associated with personalized recommendations will depend upon how complex algorithms are used & what kind of hardware/software is needed . Additionally there is always a risk that customers might find these recommendations intrusive / annoying thus leading towards decreased user engagement levels.",
+    "Personalized recommendations have potential benefits like increased user engagement levels through better targeting thus resulting into higher sales volumes & improved profits margins over time.",
+    "For personalized recommendation systems data sources will typically consist off past purchase histories combined together with other demographic / psychographic attributes related too users preferences / interests (e g age group , gender )etc .. Examples might involve using internal datasets related too past purchase histories combined together alongside external datasets related too demographics / psychographics sourced from services like Facebook Ads Manager APIs",
+  ]);
   // const listItems = Array.from(listRef.current.querySelectorAll("li"));
   // const maxWidth = Math.max(...listItems.map((li) => li.clientWidth));
   // listRef.current.style.minWidth = `${maxWidth}px`
@@ -182,7 +208,7 @@ function RegistrationForm() {
 
     // const data = await response.json();
     // console.log(data);
-    setCurrentField(99);
+    setCurrentField("output");
   };
 
   function getSolutionComponents(map1) {
@@ -229,15 +255,74 @@ function RegistrationForm() {
   //   listRef.current.style.minWidth = `${maxWidth}px`;
   // }, [map1]);
 
+  const handleNextUsecase = () => {
+    if (currentField < 3) {
+      setCurrentField(currentField + 1);
+    } else {
+      setCurrentField("companyName");
+    }
+  };
+
   return (
+    <div>
+    <Navbar />
     <div className={classes.root}>
-      {currentField === 99 && (
-        <div className={classes.field}>
-          {console.log("Under display output part")}
-          {getSolutionComponents(map1)}
-        </div>
+      {Number.isInteger(currentField) && (
+        
+          <Box m={5} >
+          <Box style={{ position: 'fixed', top: 100 }}>
+        <Typography variant="h5">{Array.from(map1.keys())[currentField]}</Typography>
+      </Box>
+      <Box mt={20} mr={1} ml={1} style={{ overflow: 'auto', maxHeight: 'calc(100vh - 16rem)' }}>
+            <Typography
+              variant="body2"
+              component="p"
+              style={{ marginTop: "1rem" }}
+            >
+              {map1.get(Array.from(map1.keys())[currentField])}
+            </Typography>
+
+            <Typography variant="h6" component="h6">
+              Potential Costs and Risks
+            </Typography>
+
+            <Typography variant="body2" component="h2">
+              {map2.get(Array.from(map2.keys())[currentField])[0]}
+            </Typography>
+
+            <Typography variant="h6" component="h6">
+              Evaluation
+            </Typography>
+
+            <Typography variant="body2" component="h2">
+              {map2.get(Array.from(map2.keys())[currentField])[1]}
+            </Typography>
+
+            <Typography variant="h6" component="h6">
+              Data Sources
+            </Typography>
+
+            <Typography variant="body2" component="h2">
+              {map2.get(Array.from(map2.keys())[currentField])[2]}
+            </Typography>
+
+            
+            </Box>
+            <Button
+              variant="contained"
+              color="primary"
+              margin="normal"
+              aligh="right"
+              onClick={handleNextUsecase}
+              style={{ marginTop: "1rem", marginLeft:"15rem" }}
+            >
+              Next Usecase
+            </Button>
+          </Box>
+   
       )}
-      {currentField !== 99 && (
+      {!Number.isInteger(currentField) && (
+        <Box>
         <form className={classes.form} onSubmit={handleSubmit}>
           <h1 className={classes.title}>Start</h1>
           {currentField === "companyName" && (
@@ -484,16 +569,24 @@ function RegistrationForm() {
 
           {currentField === "implAIBefore" && (
             <div className={classes.field}>
-              
-                <FormLabel id="demo-radio-buttons-group-label">Have you implemented AI solutions before in your business?</FormLabel>
-                <RadioGroup
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  name="radio-buttons-group"
-                >
-                  <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                  <FormControlLabel value={false} control={<Radio />} label="No" />
-                </RadioGroup>
-              
+              <FormLabel id="demo-radio-buttons-group-label">
+                Have you implemented AI solutions before in your business?
+              </FormLabel>
+              <RadioGroup
+                aria-labelledby="demo-radio-buttons-group-label"
+                name="radio-buttons-group"
+              >
+                <FormControlLabel
+                  value={true}
+                  control={<Radio />}
+                  label="Yes"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={<Radio />}
+                  label="No"
+                />
+              </RadioGroup>
 
               <Button
                 variant="contained"
@@ -506,7 +599,9 @@ function RegistrationForm() {
             </div>
           )}
         </form>
+        </Box>
       )}
+    </div>
     </div>
   );
 }
