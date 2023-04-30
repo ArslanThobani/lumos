@@ -5,6 +5,7 @@ import { makeStyles } from "@mui/styles";
 import {
   Collapse,
   FormControl,
+  FormControlLabel,
   FormLabel,
   List,
   ListItem,
@@ -112,12 +113,12 @@ function RegistrationForm() {
   // console.log(map1)
   const handleNextField = () => {
     // setCurrentField(currentField + 1)
-    console.log(currentField)
+    console.log(currentField);
     switch (currentField) {
       case "companyName":
-        console.log(currentField)
-        setCurrentField(() => "industry");
-        console.log(currentField)
+        console.log(currentField);
+        setCurrentField(() => "implAIBefore");
+        console.log(currentField);
         break;
 
       case "industry":
@@ -171,16 +172,16 @@ function RegistrationForm() {
     event.preventDefault();
     // submit form data to backend
     console.log("In submit..");
-    const response = await fetch("/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+    // const response = await fetch("http://138.246.3.237:8000/get_use_cases_chat_gpt", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(formData),
+    // });
 
-    const data = await response.json();
-    console.log(data);
+    // const data = await response.json();
+    // console.log(data);
     setCurrentField(99);
   };
 
@@ -243,7 +244,7 @@ function RegistrationForm() {
             <div className={classes.field}>
               <TextField
                 id="companyName"
-                label="Company Name"
+                label="What is the name of your company?"
                 name="companyName"
                 onChange={handleInputChange}
                 variant="outlined"
@@ -265,7 +266,7 @@ function RegistrationForm() {
             <div className={classes.field}>
               <TextField
                 id="industry"
-                label="Industry"
+                label="What industry/sector does it belong to?"
                 name="industry"
                 onChange={handleInputChange}
                 variant="outlined"
@@ -287,7 +288,7 @@ function RegistrationForm() {
             <div className={classes.field}>
               <TextField
                 id="product"
-                label="Product"
+                label="What products/services do you offer?"
                 name="product"
                 onChange={handleInputChange}
                 variant="outlined"
@@ -309,7 +310,7 @@ function RegistrationForm() {
             <div className={classes.field}>
               <TextField
                 id="businessModel"
-                label="Business Model"
+                label="What is your business model?"
                 name="businessModel"
                 onChange={handleInputChange}
                 variant="outlined"
@@ -353,7 +354,7 @@ function RegistrationForm() {
             <div className={classes.field}>
               <TextField
                 id="audience"
-                label="Your clients"
+                label="Who are your customers/clients?"
                 name="audience"
                 onChange={handleInputChange}
                 variant="outlined"
@@ -375,7 +376,7 @@ function RegistrationForm() {
             <div className={classes.field}>
               <TextField
                 id="differentiateFactor"
-                label="Differentiating Factor"
+                label="What differentiates your business from your competitors' business?"
                 name="differentiateFactor"
                 onChange={handleInputChange}
                 variant="outlined"
@@ -397,7 +398,7 @@ function RegistrationForm() {
             <div className={classes.field}>
               <TextField
                 id="goal"
-                label="Vision of the Company"
+                label="What is your company's mission or goal?"
                 name="goal"
                 onChange={handleInputChange}
                 variant="outlined"
@@ -419,8 +420,52 @@ function RegistrationForm() {
             <div className={classes.field}>
               <TextField
                 id="challenges"
-                label="Major challenge your company faces"
+                label="What are the specific pain points or challenges your business is facing?"
                 name="challenges"
+                onChange={handleInputChange}
+                variant="outlined"
+                size="small"
+                margin="normal"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                margin="normal"
+                onClick={handleNextField}
+              >
+                Next
+              </Button>
+            </div>
+          )}
+
+          {currentField === "goalAI" && (
+            <div className={classes.field}>
+              <TextField
+                id="goalAI"
+                label="What outcome do you hope to achieve through AI adoption?"
+                name="goalAI"
+                onChange={handleInputChange}
+                variant="outlined"
+                size="small"
+                margin="normal"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                margin="normal"
+                onClick={handleNextField}
+              >
+                Next
+              </Button>
+            </div>
+          )}
+
+          {currentField === "limitInfra" && (
+            <div className={classes.field}>
+              <TextField
+                id="limitInfra"
+                label="Do you have any limitations with respect to talent/expertise in AI, IT or other infrastructure?"
+                name="limitInfra"
                 onChange={handleInputChange}
                 variant="outlined"
                 size="small"
@@ -439,14 +484,16 @@ function RegistrationForm() {
 
           {currentField === "implAIBefore" && (
             <div className={classes.field}>
-              <FormLabel>Has your company implemented AI before?</FormLabel>
-              <RadioGroup
-                aria-labelledby="demo-radio-buttons-group-label"
-                name="radio-buttons-group"
-              >
-                <FormControl value={true} control={<Radio />} label="Yes" />
-                <FormControl value={true} control={<Radio />} label="Yes" />
-              </RadioGroup>
+              
+                <FormLabel id="demo-radio-buttons-group-label">Have you implemented AI solutions before in your business?</FormLabel>
+                <RadioGroup
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  name="radio-buttons-group"
+                >
+                  <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                  <FormControlLabel value={false} control={<Radio />} label="No" />
+                </RadioGroup>
+              
 
               <Button
                 variant="contained"
