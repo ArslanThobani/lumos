@@ -1,10 +1,11 @@
-import './globalStyle.css';
+import "./globalStyle.css";
 import React, { useEffect, useRef, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { makeStyles } from "@mui/styles";
 import {
   Box,
+  CircularProgress,
   Collapse,
   FormControl,
   FormControlLabel,
@@ -12,12 +13,15 @@ import {
   List,
   ListItem,
   ListItemButton,
+  MenuItem,
   Radio,
   RadioGroup,
+  Select,
   Typography,
 } from "@mui/material";
 import { RadioButtonUnchecked } from "@mui/icons-material";
-import Navbar from './Navbar';
+import Navbar from "./Navbar";
+import Spinner from "./Spinner";
 
 // import React, { useState } from 'react';
 
@@ -44,10 +48,11 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    // backgroundColor: '#fff',
-    padding: "50px",
+    padding: "10px",
     borderRadius: "5px",
     boxShadow: "0 3px 5px 0 rgba(0, 0, 0, 0.16)",
+    width: "375px",
+    height: "400px",
   },
   title: {
     fontWeight: 700,
@@ -66,9 +71,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     // marginBottom: '100px',
-    padding: "20px",
+    padding: "5px",
     width: "100%",
-    size: "small",
+    size: "normal",
   },
   button: {
     display: "flex",
@@ -83,55 +88,14 @@ function RegistrationForm() {
   const classes = useStyles();
   const [expandedKeys, setExpandedKeys] = useState(null);
   const [formData, setFormData] = useState({});
-  // const [currentField, setCurrentField] = useState("companyName");
-  const [currentField, setCurrentField] = useState(0);
+  const [currentField, setCurrentField] = useState("companyName");
+  const [loading, setLoading] = useState(false);
+  // const [currentField, setCurrentField] = useState(0);
   const listRef = useRef(null);
 
   const map1 = new Map();
-
-  map1.set(
-    "Automated Defect Detection",
-    "You can use AI-powered computer vision systems to automatically detect defects in your products during the manufacturing process. The system can analyze images of the products and identify any abnormalities or defects such as cracks, discoloration, or other visual imperfections. This can help you catch defects early in the process and reduce waste."
-  );
-  map1.set(
-    "Predictive Maintenance",
-    "You can also use AI to monitor your machines and equipment to detect potential issues before they become serious. By analyzing data from sensors and other sources, AI can identify patterns and anomalies that indicate potential equipment failures. This can help you schedule maintenance proactively, avoid downtime, and minimize the risk of product defects caused by faulty equipment."
-  );
-  map1.set(
-    "Statistical Process Control",
-    "You can use statistical process control (SPC) techniques to monitor the quality of your products and identify any trends or patterns that may indicate a problem. AI-powered SPC systems can analyze large amounts of data in real-time to detect variations and deviations from normal patterns. This can help you catch quality issues early and take corrective action before they become a major problem."
-  );
-  map1.set(
-    "Root Cause Analysis",
-    "When quality issues do occur, you can use AI-powered root cause analysis tools to identify the underlying causes of the problem. By analyzing data from multiple sources, including production data, customer feedback, and other sources, AI can help you identify the root cause of the issue and take corrective action to prevent it from happening again."
-  );
-  map1.set(
-    "Automated Testing",
-    "You can also use AI to automate testing of your products. This can help you test products more quickly and efficiently, while reducing the risk of human error. AI-powered testing systems can perform a variety of tests, such as strength tests or impact tests, to ensure that your products meet quality standards."
-  );
-
   const map2 = new Map();
 
-  map2.set("Automated Food Ordering", [
-    "The cost of implementing an automated food ordering system would depend on the complexity of the system, as well as the cost of any hardware or software required. There is also a risk that customers may not be comfortable with using an automated system, resulting in a decrease in customer satisfaction.",
-    "Implementing an automated food ordering system could create business value by reducing order processing time and increasing efficiency, leading to increased customer satisfaction and improved profitability.",
-    "Data sources for this use case could include customer order history, restaurant menus, delivery locations etc. Specific examples could include online databases such as Yelp or Zomato for restaurant menus and delivery locations, or internal databases containing customer order history.",
-  ]);
-  map2.set("Predictive Ordering", [
-    "The cost of implementing a predictive ordering system would depend on the complexity of the algorithm used to make predictions, as well as any hardware or software required to run it. There is also a risk that customers may not be comfortable with having their orders predicted by AI algorithms which could lead to decreased user engagement with the app.",
-    "Implementing predictive ordering can create business value by allowing restaurants to anticipate demand more accurately which can lead to improved efficiency in operations and increased profitability due to reduced wastage from over-ordering ingredients etc..",
-    "Data sources for this use case could include customer order history, restaurant menus etc., along with external data sources such as weather forecasts which can help predict demand based on seasonality trends etc.. Specific examples could include online databases such as Yelp or Zomato for restaurant menus and delivery locations, or internal databases containing customer order history combined with external data sources such as weather forecasts from services like Dark Sky API etc..",
-  ]);
-  map2.set("Route Optimization", [
-    "The cost of implementing route optimization would depend on the complexity of the algorithm used for route optimization along with any hardware/software required to run it efficiently. There is also a risk that customers may experience delays if routes are not optimized correctly due to incorrect assumptions about traffic conditions etc., resulting in decreased user satisfaction levels.",
-    "Implementing route optimization can create business value by reducing travel times , improving fleet utilization , increasing efficiency , leading ultimately leading towards increased profitability.",
-    "Data sources for this use case would include real-time traffic information , road accessibility information , location coordinates (latitude & longitude)etc . Specific examples could include Google Maps API & Open Street Map API’s providing real-time traffic information & road accessibility information respectively along with GPS coordinates from devices like smartphones/tablets carried by delivery boys.",
-  ]);
-  map2.set("Personalized Recommendations", [
-    "The costs associated with personalized recommendations will depend upon how complex algorithms are used & what kind of hardware/software is needed . Additionally there is always a risk that customers might find these recommendations intrusive / annoying thus leading towards decreased user engagement levels.",
-    "Personalized recommendations have potential benefits like increased user engagement levels through better targeting thus resulting into higher sales volumes & improved profits margins over time.",
-    "For personalized recommendation systems data sources will typically consist off past purchase histories combined together with other demographic / psychographic attributes related too users preferences / interests (e g age group , gender )etc .. Examples might involve using internal datasets related too past purchase histories combined together alongside external datasets related too demographics / psychographics sourced from services like Facebook Ads Manager APIs",
-  ]);
   // const listItems = Array.from(listRef.current.querySelectorAll("li"));
   // const maxWidth = Math.max(...listItems.map((li) => li.clientWidth));
   // listRef.current.style.minWidth = `${maxWidth}px`
@@ -142,9 +106,9 @@ function RegistrationForm() {
     console.log(currentField);
     switch (currentField) {
       case "companyName":
-        console.log(currentField);
-        setCurrentField(() => "implAIBefore");
-        console.log(currentField);
+        // console.log(currentField);
+        setCurrentField(() => "industry");
+        // console.log(currentField);
         break;
 
       case "industry":
@@ -156,10 +120,6 @@ function RegistrationForm() {
         break;
 
       case "businessModel":
-        setCurrentField("productLine");
-        break;
-
-      case "productLine":
         setCurrentField("audience");
         break;
 
@@ -198,17 +158,21 @@ function RegistrationForm() {
     event.preventDefault();
     // submit form data to backend
     console.log("In submit..");
-    // const response = await fetch("http://138.246.3.237:8000/get_use_cases_chat_gpt", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(formData),
-    // });
 
-    // const data = await response.json();
-    // console.log(data);
-    setCurrentField("output");
+    const response = await fetch(
+      "http://localhost:8000/get_use_cases_chat_gpt",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+
+    const data = await response.json();
+    console.log(data);
+    setCurrentField(0);
   };
 
   function getSolutionComponents(map1) {
@@ -263,50 +227,60 @@ function RegistrationForm() {
     }
   };
 
+  // useEffect(() => {
+
+
+  // }, [loading])
+
   return (
-    <div>
-    <Navbar />
-    <div className={classes.root}>
-      {Number.isInteger(currentField) && (
-        
-          <Box m={5} >
-          <Box style={{ position: 'fixed', top: 100 }}>
-        <Typography variant="h5">{Array.from(map1.keys())[currentField]}</Typography>
-      </Box>
-      <Box mt={20} mr={1} ml={1} style={{ overflow: 'auto', maxHeight: 'calc(100vh - 16rem)' }}>
-            <Typography
-              variant="body2"
-              component="p"
-              style={{ marginTop: "1rem" }}
+    <>
+    <div style={{ backgroundColor: "#a2d2ffd" }}>
+      <Navbar />
+      <div className={classes.root}>
+        {Number.isInteger(currentField) && (
+          <Box m={5}>
+            <Box style={{ position: "fixed", top: 100 }}>
+              <Typography variant="h5">
+                {Array.from(map1.keys())[currentField]}
+              </Typography>
+            </Box>
+            <Box
+              mt={20}
+              mr={1}
+              ml={1}
+              style={{ overflow: "auto", maxHeight: "calc(100vh - 16rem)" }}
             >
-              {map1.get(Array.from(map1.keys())[currentField])}
-            </Typography>
+              <Typography
+                variant="body2"
+                component="p"
+                style={{ marginTop: "1rem" }}
+              >
+                {map1.get(Array.from(map1.keys())[currentField])}
+              </Typography>
 
-            <Typography variant="h6" component="h6">
-              Potential Costs and Risks
-            </Typography>
+              <Typography variant="h6" component="h6">
+                Potential Costs and Risks
+              </Typography>
 
-            <Typography variant="body2" component="h2">
-              {map2.get(Array.from(map2.keys())[currentField])[0]}
-            </Typography>
+              <Typography variant="body2" component="h2">
+                {map2.get(Array.from(map2.keys())[currentField])[0]}
+              </Typography>
 
-            <Typography variant="h6" component="h6">
-              Evaluation
-            </Typography>
+              <Typography variant="h6" component="h6">
+                Evaluation
+              </Typography>
 
-            <Typography variant="body2" component="h2">
-              {map2.get(Array.from(map2.keys())[currentField])[1]}
-            </Typography>
+              <Typography variant="body2" component="h2">
+                {map2.get(Array.from(map2.keys())[currentField])[1]}
+              </Typography>
 
-            <Typography variant="h6" component="h6">
-              Data Sources
-            </Typography>
+              <Typography variant="h6" component="h6">
+                Data Sources
+              </Typography>
 
-            <Typography variant="body2" component="h2">
-              {map2.get(Array.from(map2.keys())[currentField])[2]}
-            </Typography>
-
-            
+              <Typography variant="body2" component="h2">
+                {map2.get(Array.from(map2.keys())[currentField])[2]}
+              </Typography>
             </Box>
             <Button
               variant="contained"
@@ -314,295 +288,347 @@ function RegistrationForm() {
               margin="normal"
               aligh="right"
               onClick={handleNextUsecase}
-              style={{ marginTop: "1rem", marginLeft:"15rem" }}
+              style={{ marginTop: "1rem", marginLeft: "15rem" }}
             >
               Next Usecase
             </Button>
           </Box>
-   
-      )}
-      {!Number.isInteger(currentField) && (
-        <Box>
-        <form className={classes.form} onSubmit={handleSubmit}>
-          <h1 className={classes.title}>Start</h1>
-          {currentField === "companyName" && (
-            <div className={classes.field}>
-              <TextField
-                id="companyName"
-                label="What is the name of your company?"
-                name="companyName"
-                onChange={handleInputChange}
-                variant="outlined"
-                size="small"
-                margin="normal"
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                margin="normal"
-                onClick={handleNextField}
-              >
-                Next
-              </Button>
-            </div>
-          )}
+        )}
+        {!Number.isInteger(currentField) && (
+          <Box>
+            <form className={classes.form} onSubmit={handleSubmit}>
+              {currentField === "companyName" && (
+                <Box m={2} ml={2} className={classes.field}>
+                  <Typography variant="h5" position={"relative"} align="center">
+                    What is the name of your company?
+                  </Typography>
+                  <TextField
+                    id="companyName"
+                    name="companyName"
+                    onChange={handleInputChange}
+                    variant="standard"
+                    size="small"
+                    // margin="normal"
+                    alignItems="center"
+                    required="true"
+                    margin="normal"
+                  /><br/>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    margin="normal"
+                    onClick={handleNextField}
+                    marginTop="100px"
+                  >
+                    Next
+                  </Button>
+                </Box>
+              )}
 
-          {currentField === "industry" && (
-            <div className={classes.field}>
-              <TextField
-                id="industry"
-                label="What industry/sector does it belong to?"
-                name="industry"
-                onChange={handleInputChange}
-                variant="outlined"
-                size="small"
-                margin="normal"
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                margin="normal"
-                onClick={handleNextField}
-              >
-                Next
-              </Button>
-            </div>
-          )}
+              {currentField === "industry" && (
+                <Box m={2} ml={2} className={classes.field}>
+                  <Typography variant="h5" position={"relative"} align="center">
+                    What industry/sector does it belong to?
+                  </Typography>
+                  <br />
+                  <Select
+                    style={{ width: "200px" }}
+                    name="industry"
+                    onChange={handleInputChange}
+                  >
+                    <MenuItem value="">Select an option</MenuItem>
+                    <MenuItem value="Agriculture">Agriculture</MenuItem>
+                    <MenuItem value="Food Delivery">Food Delivery</MenuItem>
+                    <MenuItem value="Construction">Construction</MenuItem>
+                  </Select>
+                  <br />
+                  <br />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    margin="normal"
+                    onClick={handleNextField}
+                    marginTop="100px"
+                  >
+                    Next
+                  </Button>
+                </Box>
+              )}
 
-          {currentField === "product" && (
-            <div className={classes.field}>
-              <TextField
-                id="product"
-                label="What products/services do you offer?"
-                name="product"
-                onChange={handleInputChange}
-                variant="outlined"
-                size="small"
-                margin="normal"
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                margin="normal"
-                onClick={handleNextField}
-              >
-                Next
-              </Button>
-            </div>
-          )}
+              {currentField === "product" && (
+                <Box m={2} ml={2} className={classes.field}>
+                  <Typography variant="h5" position={"relative"} align="center">
+                    What products/services do you offer?
+                  </Typography>
+                  <br></br>
+                  <TextField
+                    id="product"
+                    name="product"
+                    onChange={handleInputChange}
+                    variant="standard"
+                    size="small"
+                    // margin="normal"
+                    alignItems="center"
+                    required="true"
+                    margin="normal"
+                    multiline
+                  />{" "}
+                  <br />
+                  <br />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    margin="normal"
+                    onClick={handleNextField}
+                    marginTop="3rem"
+                  >
+                    Next
+                  </Button>
+                </Box>
+              )}
 
-          {currentField === "businessModel" && (
-            <div className={classes.field}>
-              <TextField
-                id="businessModel"
-                label="What is your business model?"
-                name="businessModel"
-                onChange={handleInputChange}
-                variant="outlined"
-                size="small"
-                margin="normal"
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                margin="normal"
-                onClick={handleNextField}
-              >
-                Next
-              </Button>
-            </div>
-          )}
+              {currentField === "businessModel" && (
+                <Box m={2} ml={2} className={classes.field}>
+                  <Typography variant="h5" position={"relative"} align="center">
+                    What is your business model?
+                  </Typography><br></br>
+                  <TextField
+                    id="businessModel"
+                    name="businessModel"
+                    onChange={handleInputChange}
+                    variant="standard"
+                    size="small"
+                    // margin="normal"
+                    alignItems="center"
+                    required="true"
+                    margin="normal"
+                    multiline
+                  /><br /><br />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    margin="normal"
+                    onClick={handleNextField}
+                    marginTop="100px"
+                  >
+                    Next
+                  </Button>
+                </Box>
+              )}
 
-          {currentField === "productLine" && (
-            <div className={classes.field}>
-              <TextField
-                id="productLine"
-                label="Product Line"
-                name="productLine"
-                onChange={handleInputChange}
-                variant="outlined"
-                size="small"
-                margin="normal"
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                margin="normal"
-                onClick={handleNextField}
-              >
-                Next
-              </Button>
-            </div>
-          )}
+              {currentField === "audience" && (
+                <Box m={2} ml={2} className={classes.field}>
+                  <Typography variant="h5" position={"relative"} align="center">
+                    Who are your customers/clients?
+                  </Typography><br></br>
+                  <TextField
+                    id="audience"
+                    name="audience"
+                    onChange={handleInputChange}
+                    variant="standard"
+                    size="small"
+                    // margin="normal"
+                    alignItems="center"
+                    required="true"
+                    margin="normal"
+                    multiline
+                  /><br></br><br></br>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    margin="normal"
+                    onClick={handleNextField}
+                    marginTop="100px"
+                  >
+                    Next
+                  </Button>
+                </Box>
+              )}
 
-          {currentField === "audience" && (
-            <div className={classes.field}>
-              <TextField
-                id="audience"
-                label="Who are your customers/clients?"
-                name="audience"
-                onChange={handleInputChange}
-                variant="outlined"
-                size="small"
-                margin="normal"
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                margin="normal"
-                onClick={handleNextField}
-              >
-                Next
-              </Button>
-            </div>
-          )}
+              {currentField === "differentiateFactor" && (
+                <Box m={2} ml={2} className={classes.field}>
+                  <Typography variant="h5" position={"relative"} align="center">
+                    What differentiates your business from your competitors'
+                    business?
+                  </Typography><br></br>
+                  <TextField
+                    id="differentiateFactor"
+                    name="differentiateFactor"
+                    onChange={handleInputChange}
+                    variant="standard"
+                    size="small"
+                    // margin="normal"
+                    alignItems="center"
+                    required="true"
+                    margin="normal"
+                    multiline
+                  /><br /><br/>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    margin="normal"
+                    onClick={handleNextField}
+                    marginTop="100px"
+                  >
+                    Next
+                  </Button>
+                </Box>
+              )}
 
-          {currentField === "differentiateFactor" && (
-            <div className={classes.field}>
-              <TextField
-                id="differentiateFactor"
-                label="What differentiates your business from your competitors' business?"
-                name="differentiateFactor"
-                onChange={handleInputChange}
-                variant="outlined"
-                size="small"
-                margin="normal"
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                margin="normal"
-                onClick={handleNextField}
-              >
-                Next
-              </Button>
-            </div>
-          )}
+              {currentField === "goal" && (
+                <Box m={2} ml={2} className={classes.field}>
+                  <Typography variant="h5" position={"relative"} align="center">
+                    What is your company's mission or goal?
+                  </Typography><br></br>
+                  <TextField
+                    id="goal"
+                    name="goal"
+                    onChange={handleInputChange}
+                    variant="standard"
+                    size="small"
+                    // margin="normal"
+                    alignItems="center"
+                    required="true"
+                    margin="normal"
+                    multiline
+                  /><br /><br />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    margin="normal"
+                    onClick={handleNextField}
+                    marginTop="100px"
+                  >
+                    Next
+                  </Button>
+                </Box>
+              )}
 
-          {currentField === "goal" && (
-            <div className={classes.field}>
-              <TextField
-                id="goal"
-                label="What is your company's mission or goal?"
-                name="goal"
-                onChange={handleInputChange}
-                variant="outlined"
-                size="small"
-                margin="normal"
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                margin="normal"
-                onClick={handleNextField}
-              >
-                Next
-              </Button>
-            </div>
-          )}
+              {currentField === "challenges" && (
+                <Box m={2} ml={2} className={classes.field}>
+                  <Typography variant="h5" position={"relative"} align="center">
+                    What are the specific pain points or challenges your
+                    business is facing?
+                  </Typography><br></br>
+                  <TextField
+                    id="challenges"
+                    name="challenges"
+                    onChange={handleInputChange}
+                    variant="standard"
+                    size="small"
+                    // margin="normal"
+                    alignItems="center"
+                    required="true"
+                    margin="normal"
+                    multiline
+                  /><br /><br />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    margin="normal"
+                    onClick={handleNextField}
+                    marginTop="100px"
+                  >
+                    Next
+                  </Button>
+                </Box>
+              )}
 
-          {currentField === "challenges" && (
-            <div className={classes.field}>
-              <TextField
-                id="challenges"
-                label="What are the specific pain points or challenges your business is facing?"
-                name="challenges"
-                onChange={handleInputChange}
-                variant="outlined"
-                size="small"
-                margin="normal"
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                margin="normal"
-                onClick={handleNextField}
-              >
-                Next
-              </Button>
-            </div>
-          )}
+              {currentField === "goalAI" && (
+                <Box m={2} ml={2} className={classes.field}>
+                  <Typography variant="h5" position={"relative"} align="center">
+                    What outcome do you hope to achieve through AI adoption?
+                  </Typography>
+                  <TextField
+                    id="goalAI"
+                    name="goalAI"
+                    onChange={handleInputChange}
+                    variant="standard"
+                    size="small"
+                    // margin="normal"
+                    alignItems="center"
+                    required="true"
+                    margin="normal"
+                  />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    margin="normal"
+                    onClick={handleNextField}
+                    marginTop="100px"
+                  >
+                    Next
+                  </Button>
+                </Box>
+              )}
 
-          {currentField === "goalAI" && (
-            <div className={classes.field}>
-              <TextField
-                id="goalAI"
-                label="What outcome do you hope to achieve through AI adoption?"
-                name="goalAI"
-                onChange={handleInputChange}
-                variant="outlined"
-                size="small"
-                margin="normal"
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                margin="normal"
-                onClick={handleNextField}
-              >
-                Next
-              </Button>
-            </div>
-          )}
+              {currentField === "limitInfra" && (
+                <Box m={2} ml={2} className={classes.field}>
+                  <Typography variant="h5" position={"relative"} align="center">
+                    Do you have any limitations with respect to talent/expertise
+                    in AI, IT or other infrastructure?
+                  </Typography><br></br>
+                  <TextField
+                    id="limitInfra"
+                    name="limitInfra"
+                    onChange={handleInputChange}
+                    variant="standard"
+                    size="small"
+                    // margin="normal"
+                    alignItems="center"
+                    required="true"
+                    margin="normal"
+                    multiline
+                  /><br /><br />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    margin="normal"
+                    onClick={handleNextField}
+                    marginTop="100px"
+                  >
+                    Next
+                  </Button>
+                </Box>
+              )}
 
-          {currentField === "limitInfra" && (
-            <div className={classes.field}>
-              <TextField
-                id="limitInfra"
-                label="Do you have any limitations with respect to talent/expertise in AI, IT or other infrastructure?"
-                name="limitInfra"
-                onChange={handleInputChange}
-                variant="outlined"
-                size="small"
-                margin="normal"
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                margin="normal"
-                onClick={handleNextField}
-              >
-                Next
-              </Button>
-            </div>
-          )}
-
-          {currentField === "implAIBefore" && (
-            <div className={classes.field}>
-              <FormLabel id="demo-radio-buttons-group-label">
-                Have you implemented AI solutions before in your business?
-              </FormLabel>
-              <RadioGroup
-                aria-labelledby="demo-radio-buttons-group-label"
-                name="radio-buttons-group"
-              >
-                <FormControlLabel
-                  value={true}
-                  control={<Radio />}
-                  label="Yes"
-                />
-                <FormControlLabel
-                  value={false}
-                  control={<Radio />}
-                  label="No"
-                />
-              </RadioGroup>
-
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                margin="normal"
-              >
-                Submit
-              </Button>
-            </div>
-          )}
-        </form>
-        </Box>
-      )}
+              {currentField === "implAIBefore" && (
+                <Box m={2} ml={2} className={classes.field}>
+                  <Typography variant="h5" position={"relative"} align="center">
+                    Have you implemented AI solutions before in your business?
+                  </Typography> <br></br>
+                  <RadioGroup
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    name="radio-buttons-group"
+                  >
+                    <FormControlLabel
+                      value={true}
+                      control={<Radio />}
+                      label="Yes"
+                    />
+                    <FormControlLabel
+                      value={false}
+                      control={<Radio />}
+                      label="No"
+                    />
+                  </RadioGroup>
+                  <br></br>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    margin="normal"
+                  >
+                    Submit
+                  </Button>
+                </Box>
+              )}
+            </form>
+          </Box>
+        )}
+      </div>
     </div>
-    </div>
+    </>
   );
 }
 
